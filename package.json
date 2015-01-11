@@ -1,0 +1,38 @@
+{
+  "name": "observ-node-array",
+  "version": "0.0.0",
+  "description": "Populate an observable array from node descriptors.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "observ-struct": "^6.0.0",
+    "observ": "^0.2.0",
+    "geval": "^2.1.1",
+    "next-tick": "^0.2.2",
+    "tape": "^3.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mmckegg/observ-node-array.git"
+  },
+  "keywords": [
+    "observ",
+    "node",
+    "hydrate",
+    "dehydrate",
+    "collection",
+    "observable"
+  ],
+  "author": "Matt McKegg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mmckegg/observ-node-array/issues"
+  },
+  "homepage": "https://github.com/mmckegg/observ-node-array"
+}
