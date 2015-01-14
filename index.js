@@ -63,7 +63,7 @@ function ObservNodeArray(options){
         )
       }
 
-      update(item)
+      update()
       updates.forEach(broadcastUpdate)
     }
   }
@@ -72,7 +72,7 @@ function ObservNodeArray(options){
     var currentIndex = obs._list.indexOf(item)
     if (~currentIndex){
       remove(currentIndex)
-      update(item)
+      update()
       broadcastUpdate([currentIndex, 1])
     }
   }
@@ -85,7 +85,8 @@ function ObservNodeArray(options){
 
       insert(targetIndex, item, descriptor)
       listen(item, targetIndex)
-      broadcastUpdate([currentIndex, 0, targetIndex])
+      update()
+      broadcastUpdate([targetIndex, 0, item])
     }
   }
 
