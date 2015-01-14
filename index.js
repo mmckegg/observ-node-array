@@ -31,6 +31,14 @@ function ObservNodeArray(options){
     return obs._list.indexOf(item)
   }
 
+  obs.forEach = function(iterator, context){
+    obs._list.forEach(iterator, context)
+  }
+
+  obs.map = function(iterator, context){
+    return obs._list.map(iterator, context)
+  }
+
   obs.move = function(item, targetIndex){
     var currentIndex = obs._list.indexOf(item)
     if (~currentIndex){
