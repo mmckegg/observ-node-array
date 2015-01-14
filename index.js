@@ -83,6 +83,7 @@ function ObservNodeArray(options){
     var ctor = nodeName && resolveNode(options.nodes, nodeName)
     if (ctor){
       var item = ctor(options)
+      item.nodeName = nodeName
       item.set(descriptor)
 
       insert(targetIndex, item, descriptor)
@@ -133,6 +134,7 @@ function ObservNodeArray(options){
           // create
           if (ctor){
             instance = ctor(options)
+            instance.nodeName = nodeName
             instance.set(descriptor)
             listen(instance, i)
             obs._list[i] = instance
