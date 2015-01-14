@@ -1,6 +1,7 @@
 var NO_TRANSACTION = {}
 var Observ = require('observ')
 var Event = require('geval')
+var resolveNode = require('./resolve')
 
 module.exports = ObservNodeArray
 
@@ -78,7 +79,8 @@ function ObservNodeArray(options){
   }
 
   obs.insert = function(descriptor, targetIndex){
-    var ctor = descriptor && resolveNode(options.nodes, descriptor[options.nodeKey || 'node'])
+    var nodeName = descriptor && descriptor[options.nodeKey || 'node']
+    var ctor = nodeName && resolveNode(options.nodes, nodeName)
     if (ctor){
       var item = ctor(options)
       item.set(descriptor)
@@ -111,7 +113,8 @@ function ObservNodeArray(options){
       var descriptor = descriptors[i]
       var lastDescriptor = instanceDescriptors[i]
 
-      var ctor = descriptor && resolveNode(options.nodes, descriptor[options.nodeKey || 'node'])
+      var nodeName = descriptor[options.nodeKey || 'node']
+      var ctor = descriptor && resolveNode(options.nodes, nodeName)
 
       if (instance && descriptor && lastDescriptor && descriptor.node == lastDescriptor.node){
         instance.set(descriptor)
@@ -208,21 +211,3 @@ function ObservNodeArray(options){
 
 }
 
-function resolveNode(nodes, nodeName){
-  if (!nodeName){
-    return null
-  }
-  var node = nodes || {}
-  while (nodeName && node){
-    var index = nodeName.indexOf('/')
-    if (index < 0){
-      node = node[nodeName]
-      nodeName = null
-    } else {
-      var key = nodeName.slice(0, index)
-      nodeName = nodeName.slice(index+1)
-      node = node[key]
-    }
-  }
-  return node
-}
