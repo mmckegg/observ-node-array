@@ -3,8 +3,8 @@ var Observ = require('observ')
 
 module.exports = lookup
 function lookup(nodeArray, indexKey, valueKey){
-  var obs = Observ()
-  obs._list = []
+  var obs = Observ({})
+  obs._list = {}
 
   var listeners = []
   var keyListeners = []

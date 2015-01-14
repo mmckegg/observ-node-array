@@ -3,7 +3,7 @@ var Observ = require('observ')
 
 module.exports = map
 function map(nodeArray, valueKey){
-  var obs = Observ()
+  var obs = Observ([])
   obs._list = []
 
   var listeners = []
