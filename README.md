@@ -47,6 +47,8 @@ Hydrate descriptors based on `nodeKey` specified using the constructors in `opti
 
 ### nodeArray.remove(node)
 
+### nodeArray.onUpdate(listener)
+
 ## Lookup / Map
 
 ```
@@ -54,7 +56,7 @@ var lookup = require('observ-node-array/lookup')
 var map = require('observ-node-array/map')
 ```
 
-### var lookupValues = lookup(nodeArray, indexKey[, valueKey])
+### var lookupValues = lookup(nodeArray, indexKeyOrFunction[, valueKeyOrFunction, rawKeyOrFunction])
 
 ### lookupValues()
 
@@ -66,7 +68,7 @@ var map = require('observ-node-array/map')
 
 ### lookupValues.flush()
 
-### var values = map(nodeArray, valueKey)
+### var values = map(nodeArray, valueKeyOrFunction[, rawKeyOrFunction])
 
 ### values()
 
