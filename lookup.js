@@ -2,9 +2,10 @@ var nextTick = require('next-tick')
 var Observ = require('observ')
 
 module.exports = lookup
-function lookup(nodeArray, indexKey, valueKey){
+function lookup(nodeArray, indexKeyOrFunction, valueKeyOrFunction, rawKeyOrFunction){
   var obs = Observ({})
   obs._list = {}
+  obs._raw = {}
 
   var listeners = []
   var keyListeners = []
@@ -12,11 +13,11 @@ function lookup(nodeArray, indexKey, valueKey){
   var changing = false
 
   obs.keys = function(){
-    return Object.keys(obs._list)
+    return Object.keys(obs._raw)
   }
 
   obs.get = function(i){
-    return obs._list[i]
+    return obs._raw[i]
   }
 
   obs.flush = refresh
@@ -54,10 +55,14 @@ function lookup(nodeArray, indexKey, valueKey){
       if (Array.isArray(nodeArray._list)){
         var result = {}
         var raw = {}
+        var list = {}
 
-        nodeArray._list.forEach(applyValue, {result: result, raw: raw})
+        nodeArray._list.forEach(applyValue, {result: result, raw: raw, list: list})
 
-        obs._list = raw
+        obs._list = list
+        obs._raw = raw
+
+
         obs.set(result)
       }
       changing = false
@@ -65,14 +70,35 @@ function lookup(nodeArray, indexKey, valueKey){
   }
 
   function applyValue(item){
-    var key = item()[indexKey]
-    var value = getValue(item)
-    this.raw[key] = value
-    this.result[key] = resolve(value)
+    var key = resolve(getIndex(item))
+    if (typeof key !== 'undefined'){
+      var value = getValue(item)
+      this.list[key] = value
+      this.raw[key] = rawKeyOrFunction ? getRawValue(item) : value
+      this.result[key] = resolve(value)
+    }
+  }
+
+  function getIndex(item){
+    return typeof indexKeyOrFunction === 'function' ? 
+      indexKeyOrFunction(item) : 
+      item != null ? item[indexKeyOrFunction] : null
   }
 
   function getValue(item){
-    return valueKey ? item[valueKey] : item
+    if (valueKeyOrFunction){
+      return typeof valueKeyOrFunction === 'function' ? 
+        valueKeyOrFunction(item) : 
+        item != null ? item[valueKeyOrFunction] : null
+    } else {
+      return item
+    }
+  }
+
+  function getRawValue(item){
+    return typeof rawKeyOrFunction === 'function' ? 
+      rawKeyOrFunction(item) : 
+      item != null ? item[rawKeyOrFunction] : null
   }
 
   function getSpliceDiff(val, i){
@@ -86,7 +112,7 @@ function lookup(nodeArray, indexKey, valueKey){
 
   function getKeySpliceDiff(val, i){
     if (i > 1){
-      return addListener(val[indexKey])
+      return addListener(getIndex(val))
     } else {
       return val
     }

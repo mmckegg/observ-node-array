@@ -2,31 +2,33 @@ var nextTick = require('next-tick')
 var Observ = require('observ')
 
 module.exports = map
-function map(nodeArray, valueKey){
+function map(nodeArray, valueKeyOrFunction, rawKeyOrFunction){
   var obs = Observ([])
+  
+  obs._raw = []
   obs._list = []
 
   var listeners = []
   var changing = false
 
   obs.getLength = function(){
-    return obs._list.length
+    return obs._raw.length
   }
 
   obs.get = function(i){
-    return obs._list[i]
+    return obs._raw[i]
   }
 
   obs.indexOf = function(item){
-    return obs._list.indexOf(item)
+    return obs._raw.indexOf(item)
   }
 
   obs.forEach = function(iterator, context){
-    obs._list.forEach(iterator, context)
+    obs._raw.forEach(iterator, context)
   }
 
   obs.map = function(iterator, context){
-    return obs._list.map(iterator, context)
+    return obs._raw.map(iterator, context)
   }
 
   obs.flush = refresh
@@ -58,6 +60,7 @@ function map(nodeArray, valueKey){
     if (changing){
       if (Array.isArray(nodeArray._list)){
         obs._list = nodeArray._list.map(getValue)
+        obs._raw = rawKeyOrFunction ? nodeArray._list.map(getRawValue) : obs._list
         obs.set(obs._list.map(resolve))
       }
       changing = false
@@ -65,12 +68,24 @@ function map(nodeArray, valueKey){
   }
 
   function getValue(item){
-    return item[valueKey]
+    if (valueKeyOrFunction){
+      return typeof valueKeyOrFunction === 'function' ? 
+        valueKeyOrFunction(item) : 
+        item != null ? item[valueKeyOrFunction] : null
+    } else {
+      return item
+    }
+  }
+
+  function getRawValue(item){
+    return typeof rawKeyOrFunction === 'function' ? 
+      rawKeyOrFunction(item) : 
+      item != null ? item[rawKeyOrFunction] : null
   }
 
   function getSpliceDiff(val, i){
     if (i > 1){
-      return addListener(val[valueKey])
+      return addListener(getValue(val))
     } else {
       return val
     }
