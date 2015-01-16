@@ -5,11 +5,15 @@ var resolveNode = require('./resolve')
 
 module.exports = ObservNodeArray
 
-function ObservNodeArray(options){
-  // options: nodes, nodeKey, maps
+function ObservNodeArray(parentContext){
+  // context: nodes, nodeKey, maps
+
+  var context = Object.create(parentContext)
 
   var obs = Observ([])
   obs._list = []
+
+  context.collection = obs
 
   var removeListeners = []
   var instanceDescriptors = []
@@ -79,10 +83,10 @@ function ObservNodeArray(options){
   }
 
   obs.insert = function(descriptor, targetIndex){
-    var nodeName = descriptor && descriptor[options.nodeKey || 'node']
-    var ctor = nodeName && resolveNode(options.nodes, nodeName)
+    var nodeName = getNode(descriptor)
+    var ctor = nodeName && resolveNode(context.nodes, nodeName)
     if (ctor){
-      var item = ctor(options)
+      var item = ctor(context)
       item.nodeName = nodeName
       item.set(descriptor)
 
@@ -97,51 +101,30 @@ function ObservNodeArray(options){
     obs.insert(descriptor, obs._list.length)
   }
 
+  obs.destroy = function(){
+    obs._list.forEach(unlisten)
+  }
+
   obs(function(descriptors){
     
     if (currentTransaction === descriptors){
       return false
     }
 
+    currentTransaction = descriptors
+
     if (!Array.isArray(descriptors)){
       descriptors = []
     }
 
-    var length = Math.max(descriptors.length, instanceDescriptors.length) 
-    for (var i=0;i<length;i++){
+    var maxLength = Math.max(descriptors.length, instanceDescriptors.length) 
+    var minLength = Math.min(descriptors.length, instanceDescriptors.length) 
+    var difference = descriptors.length - instanceDescriptors.length
 
-      var instance = obs._list[i]
-      var descriptor = descriptors[i]
-      var lastDescriptor = instanceDescriptors[i]
-
-      var nodeName = descriptor[options.nodeKey || 'node']
-      var ctor = descriptor && resolveNode(options.nodes, nodeName)
-
-      if (instance && descriptor && lastDescriptor && descriptor.node == lastDescriptor.node){
-        instance.set(descriptor)
-      } else {
-
-        var prevInstance = instance
-
-        if (instance){
-          unlisten(instance, i)
-          instance = null
-        }
-
-        obs._list[i] = null
-
-        if (descriptor){
-          // create
-          if (ctor){
-            instance = ctor(options)
-            instance.nodeName = nodeName
-            instance.set(descriptor)
-            listen(instance, i)
-            obs._list[i] = instance
-          }
-        }
-
-        broadcastUpdate([i, 1, instance])
+    var updates = []
+    for (var i=0;i<maxLength;i++){
+      if (updateNode(i, descriptors[i]) && i < minLength){
+        updates.push([i, 1, obs._list[i]])
       }
     }
 
@@ -149,6 +132,19 @@ function ObservNodeArray(options){
     removeListeners.length = descriptors.length
     instanceDescriptors = descriptors.slice()
 
+    if (difference > 0){
+      var u = [minLength, 0]
+      for (var i=minLength;i<maxLength;i++){
+        u.push(obs._list[i])
+      }
+      updates.push(u)
+    } else if (difference < 0){
+      updates.push([minLength-1, -difference])
+    }
+
+    currentTransaction = NO_TRANSACTION
+
+    updates.forEach(broadcastUpdate)
   })
 
   return obs
@@ -156,27 +152,25 @@ function ObservNodeArray(options){
 
   // scoped
 
-  function listen(item, index){
-    removeListeners[index] = item(function(){
-      onUpdate(item)
-    })
-  } 
-
   function onUpdate(item){
     var index = obs._list.indexOf(item)
     if (~index && instanceDescriptors[index]){
       if (currentTransaction == NO_TRANSACTION){
+
+        var updates = []
         var oldDescriptor = instanceDescriptors[index]
         var descriptor = item()
 
-        // ensure the node is preserved
-        descriptor[options.nodeKey||'node'] = oldDescriptor[options.nodeKey||'node']
-        instanceDescriptors[index] = descriptor
+        if (getNode(descriptor) !== getNode(oldDescriptor)){
+          if (updateNode(index, descriptor)){
+            updates.push([index, 1, obs._list[index]])
+          }
+        }
 
-        var newValue = instanceDescriptors.slice()
-        currentTransaction = newValue
-        obs.set(newValue)
-        currentTransaction = NO_TRANSACTION
+        instanceDescriptors[index] = descriptor
+        update()
+
+        updates.forEach(broadcastUpdate)
       }
     }
   }
@@ -188,7 +182,14 @@ function ObservNodeArray(options){
     currentTransaction = NO_TRANSACTION
   }
 
+  function listen(item, index){
+    removeListeners[index] = item(function(){
+      onUpdate(item)
+    })
+  }
+
   function unlisten(item, index){
+
     if (removeListeners[index]){
       removeListeners[index]()
       removeListeners[index] = null
@@ -209,6 +210,47 @@ function ObservNodeArray(options){
     instanceDescriptors.splice(index, 0, descriptor)
     removeListeners.splice(index, 0, listener)
     obs._list.splice(index, 0, obj)
+  }
+
+  function updateNode(index, descriptor){
+    var instance = obs._list[index]
+    var lastDescriptor = instanceDescriptors[index]
+
+    var nodeName = getNode(descriptor)
+    var ctor = descriptor && resolveNode(context.nodes, nodeName)
+
+
+    if (instance && nodeName === getNode(lastDescriptor)){
+      instance.set(descriptor)
+    } else {
+
+
+      var prevInstance = instance
+
+      if (instance){
+        unlisten(instance, index)
+        instance = null
+      }
+
+      obs._list[index] = null
+
+      if (descriptor){
+        // create
+        if (ctor){
+          instance = ctor(context)
+          instance.nodeName = nodeName
+          instance.set(descriptor)
+          listen(instance, index)
+          obs._list[index] = instance
+        }
+      }
+
+      return true
+    }
+  }
+
+  function getNode(value){
+    return value && value[context.nodeKey||'node'] || null
   }
 
 }

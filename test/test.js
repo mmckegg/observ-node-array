@@ -68,6 +68,79 @@ test('node creation and update by set', function(t){
 
 })
 
+test('node add / remove by set', function(t){
+  
+  var obs = ObservNodeArray({
+    nodes: {
+      Foo: function(context){
+        var obs = Observ()
+        obs.type = 'Foo'
+        return obs
+      },
+      Bar: function(context){
+        var obs = Observ()
+        obs.type = 'Bar'
+        return obs
+      }
+    }
+  })
+
+  var changes = []
+  obs.onUpdate(function(change){
+    changes.push(change)
+  })
+
+  obs.set([
+    {node: 'Foo', value: 123},
+    {node: 'Bar', value: 456}
+  ])
+
+  t.equal(obs.getLength(), 2)
+  t.equal(obs.get(0).type, 'Foo')
+  t.equal(obs.get(1).type, 'Bar')
+
+  // check updates
+  t.equal(changes.length, 1)
+  t.equal(changes[0].length, 2+2)
+  t.deepEqual(changes[0].slice(0,2), [0, 0])
+  t.equal(changes[0][2], obs.get(0)); t.equal(changes[0][3], obs.get(1))
+  changes.length = 0
+
+  obs.set([
+    {node: 'Foo', value: 123},
+    {node: 'Bar', value: 456},
+    {node: 'Bar', value: 789},
+  ])
+
+  t.equal(obs.getLength(), 3)
+  t.equal(obs.get(2).type, 'Bar')
+
+  // check updates
+  t.equal(changes.length, 1)
+  t.equal(changes[0].length, 2+1)
+  t.deepEqual(changes[0].slice(0,2), [2, 0])
+  t.equal(changes[0][2], obs.get(2))
+  changes.length = 0
+
+  obs.set([
+    {node: 'Bar', value: 456},
+    {node: 'Bar', value: 789},
+  ])
+
+  t.equal(obs.getLength(), 2)
+
+  // check updates
+  t.equal(changes.length, 2)
+  t.equal(changes[0].length, 2+1)
+  t.deepEqual(changes[0].slice(0,2), [0, 1])
+  t.equal(changes[0][2], obs.get(0))
+  t.deepEqual(changes[1], [1, 1])
+
+
+  t.end()
+
+})
+
 test('setting node updates parent state', function(t){
 
   var obs = ObservNodeArray({
@@ -194,4 +267,52 @@ test('push and insert a node by descriptor', function(t){
   t.deepEqual(obs.get(4)(), { node: 'Test', id: '5', value: 'foobaz'})
 
   t.end()
+})
+
+test('change node from child', function(t){
+
+  var obs = ObservNodeArray({
+    nodes: {
+      Foo: function Foo(context){
+        var obs = ObservStruct({
+          id: Observ(),
+          value: Observ()
+        })
+
+        obs.type = 'Foo'
+
+        return obs
+      },
+
+      Bar: function Bar(context){
+        var obs = ObservStruct({
+          id: Observ(),
+          value: Observ()
+        })
+
+        obs.type = 'Bar'
+
+        return obs
+      }
+    }
+  })
+
+  obs.set([ { node: 'Foo', id: 'test', value: 456 } ])
+
+  var obj = obs.get(0)
+  t.equal(obj.type, 'Foo')
+
+  obj.set({ node: 'Bar', id: 'test', value: 456 })
+
+  var obj2 = obs.get(0)
+  t.equal(obj2.value(), 456)
+  t.equal(obj2.type, 'Bar')
+
+  obj2.set({ node: 'Foo', id: 'test', value: 456 })
+
+  var obj3 = obs.get(0)
+  t.equal(obj3.type, 'Foo')
+
+  t.end()
+
 })
