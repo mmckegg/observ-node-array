@@ -4,7 +4,8 @@ var Observ = require('observ')
 module.exports = map
 function map(nodeArray, valueKeyOrFunction, rawKeyOrFunction){
   var obs = Observ([])
-  
+  obs._type = 'NodeArrayMap'
+
   obs._raw = []
   obs._list = []
 

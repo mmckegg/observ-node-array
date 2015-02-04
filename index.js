@@ -11,6 +11,7 @@ function ObservNodeArray(parentContext){
   var context = Object.create(parentContext)
 
   var obs = Observ([])
+  obs._type = 'NodeArray'
   obs._list = []
 
   context.collection = obs

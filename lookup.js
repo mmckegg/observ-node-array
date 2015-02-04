@@ -7,6 +7,8 @@ function lookup(nodeArray, indexKeyOrFunction, valueKeyOrFunction, rawKeyOrFunct
   obs._list = {}
   obs._raw = {}
 
+  obs._type = 'NodeArrayLookup'
+
   var listeners = []
   var keyListeners = []
 
