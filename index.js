@@ -6,7 +6,7 @@ var resolveNode = require('./resolve')
 module.exports = ObservNodeArray
 
 function ObservNodeArray(parentContext){
-  // context: nodes, nodeKey, maps
+  // context: nodes, nodeKey
 
   var context = Object.create(parentContext)
 
@@ -224,9 +224,6 @@ function ObservNodeArray(parentContext){
     if (instance && nodeName === getNode(lastDescriptor)){
       instance.set(descriptor)
     } else {
-
-
-      var prevInstance = instance
 
       if (instance){
         unlisten(instance, index)
