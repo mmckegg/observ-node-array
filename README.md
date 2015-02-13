@@ -96,3 +96,9 @@ var merge = require('observ-node-array/merge')
 ### var values = concat(nodeArrays)
 
 ### var lookupValues = merge(nodeArrayLookups)
+
+## Single
+
+```
+var ObservNode = require('observ-node-array/single')
+```
