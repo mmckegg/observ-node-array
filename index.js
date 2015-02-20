@@ -15,6 +15,7 @@ function ObservNodeArray(parentContext){
   obs._list = []
 
   context.collection = obs
+  obs.context = context
 
   var removeListeners = []
   var instanceDescriptors = []
