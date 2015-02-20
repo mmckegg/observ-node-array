@@ -16,6 +16,11 @@ function ObservNode(context){
 
   var removeListener = null
 
+  var broadcastNode = null
+  obs.onNode = Event(function(broadcast){
+    broadcastNode = broadcast
+  })
+
   obs(function(descriptor){
     if (currentTransaction === NO_TRANSACTION){
       currentTransaction = descriptor
@@ -36,6 +41,8 @@ function ObservNode(context){
       obs.node.set(descriptor)
     } else {
 
+      var lastNode = obs.node
+
       if (obs.node){
         removeListener&&removeListener()
         obs.node = removeListener = null
@@ -49,6 +56,8 @@ function ObservNode(context){
           removeListener = obs.node(onUpdate)
         }
       }
+
+      broadcastNode(obs.node)
     }
   }
 
