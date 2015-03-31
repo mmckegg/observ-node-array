@@ -31,7 +31,7 @@ function lookup(nodeArray, indexKeyOrFunction, valueKeyOrFunction, rawKeyOrFunct
       removed.forEach(invoke)
 
       var keySplice = diff.map(getKeySpliceDiff)
-      var removed = keyListeners.splice.apply(keyListeners, splice)
+      var removed = keyListeners.splice.apply(keyListeners, keySplice)
       removed.forEach(invoke)
 
       changed()
