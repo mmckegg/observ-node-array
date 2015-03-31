@@ -86,16 +86,19 @@ var map = require('observ-node-array/map')
 
 ### values.flush()
 
-## Concat / Merge
+## Concat / Merge / First
 
 ```
 var concat = require('observ-node-array/concat')
 var merge = require('observ-node-array/merge')
+var first = require('observ-node-array/first')
 ```
 
 ### var values = concat(nodeArrays)
 
 ### var lookupValues = merge(nodeArrayLookups)
+
+### var firstItem = first(nodeArray)
 
 ## Single
 
