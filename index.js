@@ -96,11 +96,12 @@ function ObservNodeArray(parentContext){
       listen(item, targetIndex)
       update()
       broadcastUpdate([targetIndex, 0, item])
+      return item
     }
   }
 
   obs.push = function(descriptor){
-    obs.insert(descriptor, obs._list.length)
+    return obs.insert(descriptor, obs._list.length)
   }
 
   obs.destroy = function(){
