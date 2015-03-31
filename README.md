@@ -113,3 +113,13 @@ var ObservVarhash = require('observ-node-array/varhash')
 ```
 
 ## Watch
+
+```
+var watch = require('observ-node-array/watch')
+
+watch(nodeArray, function(item){
+  return item(function onChange(){
+
+  })
+})
+```
