@@ -105,3 +105,11 @@ var first = require('observ-node-array/first')
 ```
 var ObservNode = require('observ-node-array/single')
 ```
+
+## Varhash
+
+```
+var ObservVarhash = require('observ-node-array/varhash')
+```
+
+## Watch
