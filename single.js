@@ -45,11 +45,16 @@ function ObservNode(context){
 
       if (obs.node){
         removeListener&&removeListener()
+
+        if (obs.node.destroy){
+          obs.node.destroy()
+        }
+        
         obs.node = removeListener = null
       }
 
       if (descriptor){
-        if (ctor){
+        if (typeof ctor === 'function'){
           obs.node = ctor(context)
           obs.node.nodeName = nodeName
           obs.node.set(descriptor)
