@@ -184,3 +184,34 @@ test('change node from child', function(t){
 
   t.end()
 })
+
+test('immutable value varhash nodes', function(t) {
+  var obs = ObservNodeVarhash({
+    nodes: {
+      Test: function(context){
+        var obs = Observ()
+        obs.type = 'Test'
+        return obs
+      }
+    },
+    nodeKey: 'node'
+  })
+
+  obs.set({
+    obj: 1234
+  })
+
+  var obj = obs.get('obj')
+  t.deepEqual(obj(), 1234)
+
+  obs.set({
+    obj: 5678
+  })
+
+  // make sure the object was not regenerated
+  var obj2 = obs.get('obj')
+  t.equal(obj, obj2)
+  t.deepEqual(obj(), 5678)
+
+  t.end()
+})

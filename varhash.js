@@ -3,6 +3,8 @@ var Observ = require('observ')
 var Event = require('geval')
 var resolveNode = require('./resolve')
 
+var IMMUTABLE = {}
+
 module.exports = ObservNodeVarhash
 
 function ObservNodeVarhash(parentContext){
@@ -128,7 +130,6 @@ function ObservNodeVarhash(parentContext){
     var lastDescriptor = instanceDescriptors[key]
 
     var nodeName = getNode(descriptor)
-    var ctor = descriptor && resolveNode(context.nodes, nodeName)
 
     if (instance && nodeName === getNode(lastDescriptor)){
       instance.set(descriptor)
@@ -136,9 +137,12 @@ function ObservNodeVarhash(parentContext){
       remove(key)
       instance = null
 
-      if (descriptor){
-        // create
-        if (typeof ctor === 'function'){
+      if (descriptor != null) {
+        var ctor = nodeName === IMMUTABLE ?
+          Value : resolveNode(context.nodes, nodeName)
+
+        if (typeof ctor === 'function') {
+          // create
           instance = ctor(context)
           instance.nodeName = nodeName
           instance.set(descriptor)
@@ -152,6 +156,16 @@ function ObservNodeVarhash(parentContext){
   }
 
   function getNode(value){
-    return value && value[context.nodeKey||'node'] || null
+    if (value instanceof Object) {
+      return value && value[context.nodeKey||'node'] || null
+    } else {
+      return IMMUTABLE
+    }
   }
+}
+
+function Value(context) {
+  var obs = Observ()
+  obs.context = context
+  return obs
 }
