@@ -1,4 +1,4 @@
-var computed = require('observ/computed')
+var computed = require('./computed-with-destroy')
 
 module.exports = merge
 
