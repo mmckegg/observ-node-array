@@ -198,7 +198,7 @@ function ObservNodeArray(parentContext){
       removeListeners[index] = null
     }
 
-    if (item.destroy){
+    if (item && item.destroy){
       item.destroy()
     }
   }
