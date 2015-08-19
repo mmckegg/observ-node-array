@@ -4,6 +4,13 @@ function resolveNode(nodes, nodeName){
   if (!nodeName){
     return null
   }
+
+  // quick lookup
+  if (nodes[nodeName]) {
+    return nodes[nodeName]
+  }
+
+  // walkies
   var node = nodes || {}
   while (nodeName && node){
     var index = nodeName.indexOf('/')
