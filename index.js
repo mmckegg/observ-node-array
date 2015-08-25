@@ -78,6 +78,7 @@ function ObservNodeArray(parentContext){
   obs.remove = function(item){
     var currentIndex = obs._list.indexOf(item)
     if (~currentIndex){
+      unlisten(item, currentIndex)
       remove(currentIndex)
       update()
       broadcastUpdate([currentIndex, 1])
