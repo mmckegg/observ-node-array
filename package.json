@@ -7,10 +7,11 @@
     "test": "test"
   },
   "dependencies": {
-    "observ-struct": "^6.0.0",
-    "observ": "^0.2.0",
+    "deep-equal": "^1.0.1",
     "geval": "^2.1.1",
-    "next-tick": "^0.2.2"
+    "next-tick": "^0.2.2",
+    "observ": "^0.2.0",
+    "observ-struct": "^6.0.0"
   },
   "devDependencies": {
     "tape": "^3.0.3"

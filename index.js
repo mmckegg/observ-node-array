@@ -2,6 +2,7 @@ var NO_TRANSACTION = {}
 var Observ = require('observ')
 var Event = require('geval')
 var resolveNode = require('./resolve')
+var deepEqual = require('deep-equal')
 
 module.exports = ObservNodeArray
 
@@ -110,7 +111,7 @@ function ObservNodeArray(parentContext){
   }
 
   obs(function(descriptors){
-    
+
     if (currentTransaction === descriptors){
       return false
     }
@@ -121,8 +122,8 @@ function ObservNodeArray(parentContext){
       descriptors = []
     }
 
-    var maxLength = Math.max(descriptors.length, instanceDescriptors.length) 
-    var minLength = Math.min(descriptors.length, instanceDescriptors.length) 
+    var maxLength = Math.max(descriptors.length, instanceDescriptors.length)
+    var minLength = Math.min(descriptors.length, instanceDescriptors.length)
     var difference = descriptors.length - instanceDescriptors.length
 
     var updates = []
@@ -225,7 +226,9 @@ function ObservNodeArray(parentContext){
 
 
     if (instance && nodeName === getNode(lastDescriptor)){
-      instance.set(descriptor)
+      if (!deepEqual(instance, descriptor)) {
+        instance.set(descriptor)
+      }
     } else {
 
       if (instance){
@@ -255,4 +258,3 @@ function ObservNodeArray(parentContext){
   }
 
 }
-

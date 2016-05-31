@@ -1,5 +1,6 @@
 var nextTick = require('next-tick')
 var Observ = require('observ')
+var deepEqual = require('deep-equal')
 
 module.exports = lookup
 function lookup(nodeArray, indexKeyOrFunction, valueKeyOrFunction, rawKeyOrFunction){
@@ -41,7 +42,7 @@ function lookup(nodeArray, indexKeyOrFunction, valueKeyOrFunction, rawKeyOrFunct
   refresh()
   return obs
 
-  
+
 
   // scoped
 
@@ -64,8 +65,9 @@ function lookup(nodeArray, indexKeyOrFunction, valueKeyOrFunction, rawKeyOrFunct
         obs._list = list
         obs._raw = raw
 
-
-        obs.set(result)
+        if (!deepEqual(obs(), result)) {
+          obs.set(result)
+        }
       }
       changing = false
     }
@@ -82,15 +84,15 @@ function lookup(nodeArray, indexKeyOrFunction, valueKeyOrFunction, rawKeyOrFunct
   }
 
   function getIndex(item){
-    return typeof indexKeyOrFunction === 'function' ? 
-      indexKeyOrFunction(item) : 
+    return typeof indexKeyOrFunction === 'function' ?
+      indexKeyOrFunction(item) :
       item != null ? item[indexKeyOrFunction] : null
   }
 
   function getValue(item){
     if (valueKeyOrFunction){
-      return typeof valueKeyOrFunction === 'function' ? 
-        valueKeyOrFunction(item) : 
+      return typeof valueKeyOrFunction === 'function' ?
+        valueKeyOrFunction(item) :
         item != null ? item[valueKeyOrFunction] : null
     } else {
       return item
@@ -98,8 +100,8 @@ function lookup(nodeArray, indexKeyOrFunction, valueKeyOrFunction, rawKeyOrFunct
   }
 
   function getRawValue(item){
-    return typeof rawKeyOrFunction === 'function' ? 
-      rawKeyOrFunction(item) : 
+    return typeof rawKeyOrFunction === 'function' ?
+      rawKeyOrFunction(item) :
       item != null ? item[rawKeyOrFunction] : null
   }
 
