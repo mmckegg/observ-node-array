@@ -30,6 +30,18 @@ function ObservNode(context){
     lastDescriptor = descriptor
   })
 
+  obs.destroy = function () {
+    if (obs.node) {
+      removeListener&&removeListener()
+
+      if (obs.node.destroy){
+        obs.node.destroy()
+      }
+
+      obs.node = removeListener = null
+    }
+  }
+
   return obs
 
   // scoped
@@ -49,7 +61,7 @@ function ObservNode(context){
         if (obs.node.destroy){
           obs.node.destroy()
         }
-        
+
         obs.node = removeListener = null
       }
 
