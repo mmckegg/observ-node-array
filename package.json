@@ -1,6 +1,6 @@
 {
   "name": "observ-node-array",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "Populate an observable array from node descriptors.",
   "main": "index.js",
   "directories": {
