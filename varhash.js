@@ -93,7 +93,7 @@ function ObservNodeVarhash(parentContext){
   }
 
   function update(){
-    var newValue = {} 
+    var newValue = {}
     for (var k in instanceDescriptors){
       newValue[k] = instanceDescriptors[k]
     }
@@ -144,7 +144,6 @@ function ObservNodeVarhash(parentContext){
         if (typeof ctor === 'function') {
           // create
           instance = ctor(context)
-          instance.nodeName = nodeName
           instance.set(descriptor)
           listen(key, instance)
           obs._raw[key] = instance

@@ -91,7 +91,6 @@ function ObservNodeArray(parentContext){
     var ctor = nodeName && resolveNode(context.nodes, nodeName)
     if (typeof ctor === 'function'){
       var item = ctor(context)
-      item.nodeName = nodeName
       item.set(descriptor)
 
       insert(targetIndex, item, descriptor)
@@ -242,7 +241,6 @@ function ObservNodeArray(parentContext){
         // create
         if (typeof ctor === 'function'){
           instance = ctor(context)
-          instance.nodeName = nodeName
           instance.set(descriptor)
           listen(instance, index)
           obs._list[index] = instance
