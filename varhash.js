@@ -1,5 +1,6 @@
 var NO_TRANSACTION = {}
 var Observ = require('observ')
+var Property = require('observ-default')
 var Event = require('geval')
 var resolveNode = require('./resolve')
 
@@ -12,7 +13,7 @@ function ObservNodeVarhash(parentContext){
 
   var context = Object.create(parentContext)
 
-  var obs = Observ({})
+  var obs = Property({})
   obs._type = 'NodeVarhash'
   obs._raw = {}
 
