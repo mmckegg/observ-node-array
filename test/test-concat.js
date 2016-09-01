@@ -1,13 +1,13 @@
 var test = require('tape')
 var NodeArray = require('../')
-var Observ = require('observ')
+var Value = require('@mmckegg/mutant/value')
 var concat = require('../concat.js')
 var map = require('../map.js')
 
 var context = {
   nodes: {
     Test: function(context){
-      var obs = Observ()
+      var obs = Value()
       obs.type = 'Test'
       return obs
     }

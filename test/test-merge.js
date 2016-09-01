@@ -1,7 +1,7 @@
 var test = require('tape')
 var NodeArray = require('../')
-var Observ = require('observ')
-var ObservStruct = require('observ-struct')
+var Observ = require('@mmckegg/mutant/value')
+var ObservStruct = require('@mmckegg/mutant/struct')
 var merge = require('../merge.js')
 var lookup = require('../lookup.js')
 

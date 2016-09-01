@@ -1,13 +1,13 @@
 var Event = require('geval')
-var Observ = require('observ')
-var watch = require('observ/watch')
+var Value = require('@mmckegg/mutant/value')
+var watch = require('@mmckegg/mutant/watch')
 
 module.exports = first
 
 var NO_TRANSACTION = {}
 
 function first(nodeArray){
-  var obs = Observ()
+  var obs = Value()
   obs._type = 'SingleNode'
 
   var release = null

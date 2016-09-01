@@ -1,5 +1,5 @@
 var NO_TRANSACTION = {}
-var Observ = require('observ')
+var Value = require('@mmckegg/mutant/value')
 var Event = require('geval')
 var resolveNode = require('./resolve')
 var deepEqual = require('deep-equal')
@@ -11,7 +11,7 @@ function ObservNodeArray(parentContext){
 
   var context = Object.create(parentContext)
 
-  var obs = Observ([])
+  var obs = Value([])
   obs._type = 'NodeArray'
   obs._list = []
 
@@ -239,8 +239,10 @@ function ObservNodeArray(parentContext){
 
       if (descriptor){
         // create
-        if (typeof ctor === 'function'){
-          instance = ctor(context)
+        if (typeof ctor === 'function') {
+          var innerContext = Object.create(context)
+          instance = ctor(innerContext)
+          innerContext.node = instance
           instance.set(descriptor)
           listen(instance, index)
           obs._list[index] = instance

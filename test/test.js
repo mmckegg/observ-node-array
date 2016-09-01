@@ -1,11 +1,11 @@
 var test = require('tape')
 
 var ObservNodeArray = require('../')
-var Observ = require('observ')
-var ObservStruct = require('observ-struct')
+var Observ = require('@mmckegg/mutant/value')
+var ObservStruct = require('@mmckegg/mutant/struct')
 
 test('node creation and update by set', function(t){
-  
+
   var obs = ObservNodeArray({
     nodes: {
       Test: function(context){
@@ -69,7 +69,7 @@ test('node creation and update by set', function(t){
 })
 
 test('node add / remove by set', function(t){
-  
+
   var obs = ObservNodeArray({
     nodes: {
       Foo: function(context){

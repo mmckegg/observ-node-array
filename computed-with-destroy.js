@@ -1,4 +1,4 @@
-var Observable = require('observ')
+var Observable = require('@mmckegg/mutant/value')
 
 module.exports = computed
 

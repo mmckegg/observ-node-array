@@ -1,8 +1,8 @@
 var test = require('tape')
 
-var Observ = require('observ')
+var Value = require('@mmckegg/mutant/value')
 var ObservNodeArray = require('../')
-var ObservStruct = require('observ-struct')
+var ObservStruct = require('@mmckegg/mutant/struct')
 
 var first = require('../first.js')
 
@@ -10,13 +10,13 @@ test('first', function(t){
   var obs = ObservNodeArray({
     nodes: {
       Test: function(context){
-        var obs = Observ()
+        var obs = Value()
         obs._type = 'Test'
         return obs
       },
 
       AnotherTest: function(context){
-        var obs = Observ()
+        var obs = Value()
         obs._type = 'AnotherTest'
         return obs
       }

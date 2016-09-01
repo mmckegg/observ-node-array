@@ -1,11 +1,11 @@
 var test = require('tape')
 
 var ObservNodeVarhash = require('../varhash')
-var Observ = require('observ')
-var ObservStruct = require('observ-struct')
+var Observ = require('@mmckegg/mutant/value')
+var ObservStruct = require('@mmckegg/mutant/struct')
 
 test('varhash node creation and update by set', function(t){
-  
+
   var obs = ObservNodeVarhash({
     nodes: {
       Test: function(context){

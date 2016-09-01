@@ -1,10 +1,10 @@
 var nextTick = require('next-tick')
-var Observ = require('observ')
+var Value = require('@mmckegg/mutant/value')
 var deepEqual = require('deep-equal')
 
 module.exports = lookup
 function lookup(nodeArray, indexKeyOrFunction, valueKeyOrFunction, rawKeyOrFunction){
-  var obs = Observ({})
+  var obs = Value({})
   obs._list = {}
   obs._raw = {}
 

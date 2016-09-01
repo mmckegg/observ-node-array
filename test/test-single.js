@@ -1,8 +1,8 @@
 var test = require('tape')
 
 var ObservNode = require('../single')
-var Observ = require('observ')
-var ObservStruct = require('observ-struct')
+var Observ = require('@mmckegg/mutant/value')
+var ObservStruct = require('@mmckegg/mutant/struct')
 
 test(function(t){
   var obs = ObservNode({

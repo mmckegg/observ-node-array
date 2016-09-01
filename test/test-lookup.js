@@ -1,10 +1,10 @@
 var test = require('tape')
 
 var ObservNodeArray = require('../')
-var Observ = require('observ')
-var ObservStruct = require('observ-struct')
+var Observ = require('@mmckegg/mutant/value')
+var ObservStruct = require('@mmckegg/mutant/struct')
 var lookup = require('../lookup.js')
-var computed = require('observ/computed')
+var computed = require('@mmckegg/mutant/computed')
 
 test('map nested observ', function(t){
   var obs = ObservNodeArray({
@@ -37,7 +37,7 @@ test('map nested observ', function(t){
   lookupItems(function(change){
     changes.push(change)
   })
- 
+
   lookupItems.flush() // bypass nextTick
 
   obs.remove(obs.get(1))
@@ -83,12 +83,12 @@ test('map nested observ function', function(t){
     }
   })
 
-  var lookupItems = lookup(obs, function(x){ 
-    return x.id 
-  }, function(x) { 
-    return x.specialValue 
+  var lookupItems = lookup(obs, function(x){
+    return x.id
+  }, function(x) {
+    return x.specialValue
   }, function(){
-    return 
+    return
   })
 
   obs.set([
@@ -101,7 +101,7 @@ test('map nested observ function', function(t){
   lookupItems(function(change){
     changes.push(change)
   })
- 
+
   lookupItems.flush() // bypass nextTick
 
   obs.remove(obs.get(1))

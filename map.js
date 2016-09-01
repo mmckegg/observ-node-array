@@ -1,9 +1,9 @@
 var nextTick = require('next-tick')
-var Observ = require('observ')
+var Value = require('@mmckegg/mutant/value')
 
 module.exports = map
 function map(nodeArray, valueKeyOrFunction, rawKeyOrFunction){
-  var obs = Observ([])
+  var obs = Value([])
   obs._type = 'NodeArrayMap'
 
   obs._raw = []
@@ -70,8 +70,8 @@ function map(nodeArray, valueKeyOrFunction, rawKeyOrFunction){
 
   function getValue(item){
     if (valueKeyOrFunction){
-      return typeof valueKeyOrFunction === 'function' ? 
-        valueKeyOrFunction(item) : 
+      return typeof valueKeyOrFunction === 'function' ?
+        valueKeyOrFunction(item) :
         item != null ? item[valueKeyOrFunction] : null
     } else {
       return item
@@ -79,8 +79,8 @@ function map(nodeArray, valueKeyOrFunction, rawKeyOrFunction){
   }
 
   function getRawValue(item){
-    return typeof rawKeyOrFunction === 'function' ? 
-      rawKeyOrFunction(item) : 
+    return typeof rawKeyOrFunction === 'function' ?
+      rawKeyOrFunction(item) :
       item != null ? item[rawKeyOrFunction] : null
   }
 

@@ -1,10 +1,10 @@
 var test = require('tape')
 
 var ObservNodeArray = require('../')
-var Observ = require('observ')
-var ObservStruct = require('observ-struct')
+var Observ = require('@mmckegg/mutant/value')
+var ObservStruct = require('@mmckegg/mutant/struct')
 var map = require('../map.js')
-var computed = require('observ/computed')
+var computed = require('@mmckegg/mutant/computed')
 
 test('map nested observ', function(t){
   var obs = ObservNodeArray({
@@ -36,7 +36,7 @@ test('map nested observ', function(t){
   values(function(change){
     changes.push(change)
   })
- 
+
   values.flush() // bypass nextTick
 
   t.equal(values.get(0), obs.get(0).specialValue)
@@ -85,7 +85,7 @@ test('map nested observ with function', function(t){
   values(function(change){
     changes.push(change)
   })
- 
+
   values.flush() // bypass nextTick
 
   t.equal(values.get(0), obs.get(0))

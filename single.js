@@ -1,5 +1,5 @@
 var NO_TRANSACTION = {}
-var Observ = require('observ')
+var Observ = require('@mmckegg/mutant/value')
 var Event = require('geval')
 var resolveNode = require('./resolve')
 
