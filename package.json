@@ -7,7 +7,7 @@
     "test": "test"
   },
   "dependencies": {
-    "@mmckegg/mutant": "^1.0.1",
+    "@mmckegg/mutant": "^2.0.0",
     "deep-equal": "^1.0.1",
     "geval": "^2.1.1",
     "next-tick": "^0.2.2",
